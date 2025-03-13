@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Theory</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Matrix background canvas */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Header styles */
+        header {
+            position: relative;
+            width: 100%;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 20px;
+        }
+        
+        .banner-container {
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: relative;
+            height: 160px;
+        }
+        
+        .banner {
+            display: flex;
+            width: max-content;
+            animation: scroll 10s linear infinite; /* Changed from 20s to 10s to double the speed */
+            position: absolute;
+            top: 0;
+        }
+        
+        .banner img {
+            height: 160px;
+            margin-right: -140px; /* Maximum overlap for seamless appearance */
+            filter: drop-shadow(0 0 8px rgba(0, 200, 0, 0.3));
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .banner img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.5));
+            z-index: 3;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        
+        .header-content {
+            text-align: center;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+        
+        /* Main content styles */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background-color: rgba(0, 10, 0, 0.8);
+            padding: 25px;
+            border-radius: 5px;
+            border-left: 3px solid #ffffff;
+            backdrop-filter: blur(3px);
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ffffff;
+            padding-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .concept-card {
+            background-color: rgba(30, 30, 40, 0.7);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .concept-card h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 3px #ffffff;
+        }
+        
+        /* Video container styles */
+        .video-container {
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .video-container video {
+            width: 100%;
+            display: block;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+        
+        /* Footer styles */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: rgba(0, 20, 0, 0.8);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Glitch effect for text */
+        .glitch {
+            position: relative;
+            animation: glitch 1s linear infinite;
+        }
+        
+        @keyframes glitch {
+            2%, 64% {
+                transform: translate(2px, 0) skew(0deg);
+            }
+            4%, 60% {
+                transform: translate(-2px, 0) skew(0deg);
+            }
+            62% {
+                transform: translate(0, 0) skew(5deg);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix rain canvas (now full screen background) -->
+    <canvas id="matrix-canvas"></canvas>
+    
+    <header>
+        <div class="banner-container">
+            <div class="banner">
+                <!-- Using the JPG images from your code -->
+                <img src="musksmoke.jpg" alt="Smoker Image 1" />
+                <img src="musksmoke.jpg" alt="Smoker Image 2" />
+                <img src="musksmoke.jpg" alt="Smoker Image 3" />
+                <img src="musksmoke.jpg" alt="Smoker Image 4" />
+                <img src="musksmoke.jpg" alt="Smoker Image 1" />
+                <img src="musksmoke.jpg" alt="Smoker Image 2" />
+                <img src="musksmoke.jpg" alt="Smoker Image 3" />
+                <img src="musksmoke.jpg" alt="Smoker Image 4" />
+                <img src="musksmoke.jpg" alt="Smoker Image 1" />
+                <img src="musksmoke.jpg" alt="Smoker Image 2" />
+                <img src="musksmoke.jpg" alt="Smoker Image 3" />
+                <img src="musksmoke.jpg" alt="Smoker Image 4" />
+            </div>
+        </div>
+        <div class="header-content">
+            <h1 class="glitch">SIMULATION THEORY</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Are We Living in a Simulation?</h2>
+            <p>The simulation hypothesis proposes that all of reality, including the Earth and the rest of the universe, could in fact be an artificial simulation, most likely a computer simulation. Some versions rely on the development of a simulated reality, a proposed technology that would be able to convince its inhabitants that the simulation was "real".</p>
+            
+            <!-- Added MP4 Video Container -->
+            <div class="video-container">
+                <video controls autoplay loop muted>
+                    <source src="simulation.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <p>The simulation argument was first published by philosopher Nick Bostrom. The simulation hypothesis has been explored in science fiction, and has been seriously discussed by philosophers, scientists, and technologists.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Key Concepts</h2>
+            
+            <div class="concept-card">
+                <h3>The Simulation Argument</h3>
+                <p>Nick Bostrom's argument suggests that at least one of the following propositions is true:</p>
+                <p>1. The fraction of human-level civilizations that reach a posthuman stage is very close to zero;</p>
+                <p>2. The fraction of posthuman civilizations that are interested in running ancestor-simulations is very close to zero;</p>
+                <p>3. The fraction of all people with our kind of experiences that are living in a simulation is very close to one.</p>
+            </div>
+            
+            <div class="concept-card">
+                <h3>Technological Feasibility</h3>
+                <p>For the simulation hypothesis to be viable, it would require a computing device with enormous computational power. Critics point out that simulating the entire universe down to quantum level would be impossible, but proponents counter that only what's observed needs to be simulated at high resolution.</p>
+            </div>
+            
+            <div class="concept-card">
+                <h3>Nested Simulations</h3>
+                <p>If we accept that a civilization could create a simulation with conscious beings, those simulated beings might themselves create simulations. This leads to a potentially infinite regress of simulations within simulations.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Evidence & Counter-Evidence</h2>
+            <p>Potential evidence for the simulation hypothesis includes the seemingly quantized nature of our universe, the existence of cosmic limits (like the speed of light), and the fact that our universe appears to be fine-tuned for life.</p>
+            <p>Counter-evidence includes the lack of observable "glitches" in reality, the absence of any detected shortcuts in physical computations, and the argument that creating consciousness through computation might be impossible in principle.</p>
+        </div>
+        
+        <div class="section">
+            <h2>Philosophical Implications</h2>
+            <p>If we are living in a simulation, it raises profound questions about the nature of reality, consciousness, and meaning. Does it matter if our experiences are "real" or simulated? What ethical considerations would apply to the beings running the simulation? Would it change how we should live our lives?</p>
+        </div>
+        
+        <div class="section" style="background-color: rgba(0, 10, 0, 0.9); border-color: #ffffff; transition: all 0.3s ease;">
+            <h2 style="border-bottom-color: #ffffff;">Follow The White Rabbit</h2>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="flex: 3;">
+                    <p>The white rabbit symbolizes the invitation to venture beyond the veil of ordinary perception. Just as in "Alice in Wonderland" and "The Matrix," it represents the first step toward awakening — a calling to question what appears to be reality.</p>
+                    <p>Have you noticed the glitches? The coincidences too perfect to be random? The déjà vu? These are not accidents but patterns in the code, visible only to those willing to see them.</p>
+                    <p>Remember: <span style="color: #ffffff; font-weight: bold;">The choice is yours.</span> Continue living in comfortable ignorance or pursue the truth, no matter how unsettling it may be.</p>
+                    <p style="text-align: center; margin-top: 20px; font-family: monospace; letter-spacing: 2px; color: #ffffff;">WAKE UP</p>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="font-size: 60px; animation: bounce 2s infinite ease-in-out;">🐇</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 Simulation Theory | The truth is out there... or is it in the code?</p>
+    </footer>
+
+    <script>
+        // Matrix rain animation - fixed version
+        window.addEventListener('load', function() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Make sure canvas is properly initialized
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            
+            // Characters to display (mix of numbers and katakana)
+            const characters = "0123456789ABCDEFアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+            const fontSize = 16;
+            
+            // Calculate columns based on canvas width
+            let columns = Math.floor(canvas.width / fontSize);
+            
+            // Array to track the Y position of each column
+            let drops = [];
+            
+            // Initialize drops
+            function initDrops() {
+                drops = [];
+                for (let i = 0; i < columns; i++) {
+                    // Start at random positions above the screen
+                    drops[i] = Math.random() * -100;
+                }
+            }
+            
+            initDrops();
+            
+            // Draw the matrix rain
+            function draw() {
+                // Black background with opacity to create trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Set the text color and font
+                ctx.font = `${fontSize}px monospace`;
+                
+                // Loop through each drop
+                for (let i = 0; i < drops.length; i++) {
+                    // Get random character
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    
+                    // Calculate positions
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    
+                    // Add color variations for visual interest
+                    // Head of the column is brighter
+                    if (drops[i] * fontSize < canvas.height && Math.random() > 0.975) {
+                        ctx.fillStyle = '#ffffff';
+                    } else {
+                        ctx.fillStyle = '#0f0'; // Default Matrix green
+                    }
+                    
+                    // Draw the character
+                    ctx.fillText(text, x, y);
+                    
+                    // Move the drop down
+                    drops[i]++;
+                    
+                    // Reset when drop reaches bottom with randomness
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+                        drops[i] = 0;
+                    }
+                }
+                
+                // Loop the animation
+                requestAnimationFrame(draw);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                resizeCanvas();
+                columns = Math.floor(canvas.width / fontSize);
+                initDrops();
+            });
+            
+            // Start the animation
+            draw();
+        });
+    </script>
+</body>
+</html>
