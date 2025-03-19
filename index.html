@@ -222,6 +222,7 @@
             text-shadow: 0 0 5px #fff;
             transition: all 0.3s ease;
             margin-top: 15px;
+            cursor: pointer;
         }
         
         .shill-button:hover {
@@ -233,6 +234,12 @@
     </style>
 </head>
 <body>
+    <!-- Background Audio - optimized for Safari compatibility -->
+    <audio id="background-audio" loop preload="auto">
+        <source src="matrix.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
     <!-- Matrix rain canvas (now full screen background) -->
     <canvas id="matrix-canvas"></canvas>
     
@@ -244,10 +251,11 @@
                 <img src="musksmoke.jpg" alt="Smoker Image 2" />
                 <img src="musksmoke.jpg" alt="Smoker Image 3" />
                 <img src="musksmoke.jpg" alt="Smoker Image 4" />
-                <img src="musksmoke.jpg" alt="Smoker Image 1" />
-                <img src="musksmoke.jpg" alt="Smoker Image 2" />
-                <img src="musksmoke.jpg" alt="Smoker Image 3" />
-                <img src="musksmoke.jpg" alt="Smoker Image 4" />
+                <img src="musksmoke.jpg" alt="Smoker Image 5" />
+                <img src="musksmoke.jpg" alt="Smoker Image 6" />
+                <img src="musksmoke.jpg" alt="Smoker Image 7" />
+                <img src="musksmoke.jpg" alt="Smoker Image 8" />
+                <!-- Duplicate images to ensure smooth looping in Safari -->
                 <img src="musksmoke.jpg" alt="Smoker Image 1" />
                 <img src="musksmoke.jpg" alt="Smoker Image 2" />
                 <img src="musksmoke.jpg" alt="Smoker Image 3" />
@@ -256,9 +264,10 @@
         </div>
         <div class="header-content">
             <h1 class="glitch">SIMULATION HYPOTHESIS</h1>
-            <h2 class="glitch">CA:</h2>
+            <h2 class="glitch">CA: 7MfiAam86mX4fnga1DdrBwW9EZrTEvdDvxMm4JJmpump </h2>
+            <button id="enter-simulation-btn" class="shill-button" style="margin-bottom: 15px;">ENTER THE SIMULATION</button>
             <div class="rabbit-text">FOLLOW THE WHITE RABBIT…
-It's all just simulation…
+It's all just a simulation…
 ((`\
 ___ \\ '--._
 .'`   `'    o  )
@@ -267,7 +276,7 @@ _|    /_  \ \_\_
 {_\______\-'\__\_\
             </div>
             <div style="text-align: center;">
-                <a href="https://twitter.com/intent/post?text=WAKE%20UP%E2%80%A6%0AIt%E2%80%99s%20all%20just%20simulation%E2%80%A6%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20((%60%5C%0A%20%20%20%20%20%20%20%20%20%20%20%20__%20_%20%5C%5C%20%20'--._%0A%20%20%20%20%20%20%20%20.'%60%20%20%20%20%20%20%20%20%20%20%60'%20%20%20%20%20%20o%20%20)%0A%20%20%20%20%20%2F%20%20%20%20%20%20%20%5C%20%20%20%20%20%20%20%20'%20.%20_%20_.'%0A%20%20_%7C%20%20%20%20%20%20%20%20%2F_%20%20%20%20%20%20%20%5C%20%5C_%5C_%0A%7B_%5C______%5C-'%20%20%20%5C__%5C_%5C%0A7MfiAam86mX4fnga1DdrBwW9EZrTEvdDvxMm4JJmpump" target="_blank" class="shill-button">Shill the Hypothesis</a>
+                <a href="https://twitter.com/intent/post?text=WAKE%20UP!%0AFollow%20the%20white%20rabbit%E2%80%A6%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20((%60%5C%0A%20%20%20%20%20%20%20%20%20%20%20%20__%20_%20%5C%5C%20%20'--._%0A%20%20%20%20%20%20%20%20.'%60%20%20%20%20%20%20%20%20%20%20%60'%20%20%20%20%20%20o%20%20)%0A%20%20%20%20%20%2F%20%20%20%20%20%20%20%5C%20%20%20%20%20%20%20%20'%20.%20_%20_.'%0A%20%20_%7C%20%20%20%20%20%20%20%20%2F_%20%20%20%20%20%20%20%5C%20%5C_%5C_%0A%7B_%5C______%5C-'%20%20%20%5C__%5C_%5C%0A7MfiAam86mX4fnga1DdrBwW9EZrTEvdDvxMm4JJmpump" target="_blank" class="shill-button">Shill the Hypothesis</a>
             </div>
         </div>
     </header>
@@ -346,6 +355,54 @@ _|    /_  \ \_\_
         window.addEventListener('load', function() {
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
+            
+            // Audio handling - Safari compatible approach
+            const audio = document.getElementById('background-audio');
+            audio.volume = 0.5; // Set volume to 50%
+            
+            // Get the enter simulation button
+            const enterSimulationBtn = document.getElementById('enter-simulation-btn');
+            
+            // Safari-friendly audio playback function
+            function playAudio() {
+                // For Safari: need to load the audio first
+                audio.load();
+                
+                // Set a timeout to allow audio to load (helps on Safari)
+                setTimeout(function() {
+                    const promise = audio.play();
+                    
+                    if (promise !== undefined) {
+                        promise.then(function() {
+                            console.log("Audio playback started successfully");
+                            enterSimulationBtn.textContent = "SIMULATION ACTIVE";
+                            setTimeout(function() {
+                                enterSimulationBtn.textContent = "ENTER THE SIMULATION";
+                            }, 2000);
+                        }).catch(function(error) {
+                            console.log("Audio playback failed:", error);
+                            enterSimulationBtn.textContent = "CLICK TO START AUDIO";
+                        });
+                    }
+                }, 100);
+            }
+            
+            // Set up button click handler - Safari compatible
+            enterSimulationBtn.textContent = 'ENTER THE SIMULATION';
+            enterSimulationBtn.addEventListener('click', function() {
+                playAudio();
+            });
+            
+            // Add a body click handler for Safari
+            document.body.addEventListener('click', function bodyClick() {
+                if (audio.paused) {
+                    playAudio();
+                }
+                // Remove the event listener after first click
+                document.body.removeEventListener('click', bodyClick);
+            }, { once: true });
+            
+            // Make sure canvas is properly initialized
             
             // Make sure canvas is properly initialized
             function resizeCanvas() {
